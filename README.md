@@ -1,138 +1,131 @@
 # Syngrisi Playwright BDD Boilerplate
 
-Playwright + Gherkin (BDD) boilerplate for **[Syngrisi](https://github.com/syngrisi/syngrisi) visual regression testing**. Write visual checks in plain Gherkin and run them against a Syngrisi server.
+Write visual regression tests in plain Gherkin and run them against [Syngrisi](https://github.com/syngrisi/syngrisi) — powered by [Playwright](https://playwright.dev) and [`playwright-bdd`](https://github.com/vitalets/playwright-bdd).
 
-It includes:
+```gherkin
+Scenario: The dashboard looks right
+  When I open site "<baseUrl>"
+  Then the "#chart" visual snapshot matches "Dashboard chart"
+  And the "page" visual snapshot matches "Dashboard"
+```
 
-- **Syngrisi visual regression** as first-class Gherkin steps (`Then the "..." visual snapshot matches "..."`) backed by `@syngrisi/playwright-sdk`
-- Playwright BDD setup with TypeScript (`playwright-bdd`)
-- ~150 reusable Gherkin step definitions for navigation, actions, assertions, polling, dialogs, network checks, and visual checks
-- Test-data template helpers (`<baseUrl>`, `<generateEmail>`, …)
-- Accessibility checks via `@axe-core/playwright`
-- MCP Test Engine + `/browser` skill for AI-assisted browser sessions
-- Example visual tests against the [Syngrisi demo app](https://viktor-silakov.github.io/syngrisi-demo-app/)
+No assertions to write, no screenshots to manage by hand — Syngrisi stores baselines and shows you the diffs.
 
-## Requirements
+## Quick start
 
-- Node.js >= 22.19.0
-- MongoDB >= 8 running locally (Syngrisi stores baselines/snapshots there)
-
-## Quick Start
+You need **Node.js ≥ 22.19** and **MongoDB ≥ 8** running locally ([how to start MongoDB](#mongodb)).
 
 ```bash
-yarn install                # installs deps + Chromium
-yarn sy                     # start the Syngrisi server (http://localhost:5566, auth disabled)
-yarn test:visual            # run the visual checks against the demo app
+yarn install        # installs dependencies + Chromium
+yarn sy             # starts the Syngrisi server at http://localhost:5566
+yarn test:visual    # runs the example visual checks
 ```
 
-Then open `http://localhost:5566`, review the new baselines, accept them, and rerun `yarn test:visual` to compare against them.
+The first run creates **new baselines** (they pass automatically). Open <http://localhost:5566>, review and **accept** them, then run `yarn test:visual` again — now it compares against the accepted baselines.
 
-Run the non-visual example suite (no Syngrisi server needed):
+That's the whole loop. Everything below is optional.
+
+## Write your first test
+
+Add a `.feature` file under `features/`, tag it `@visual`, and use the visual-check step:
+
+```gherkin
+@visual
+Feature: Checkout page
+
+  Scenario: Checkout looks right
+    When I open site "<baseUrl>/checkout"
+    Then the "#summary" visual snapshot matches "Order summary"   # any CSS selector
+    And the "page" visual snapshot matches "Checkout viewport"    # current viewport
+    And the "full page" visual snapshot matches "Checkout full"   # full scrollable page
+```
+
+Run it:
 
 ```bash
-yarn test
+yarn test:visual
 ```
 
-Useful commands:
+You get ~150 ready-made steps for navigation, clicks, forms, assertions, waits and more — so most scenarios need **no custom code**. A few examples:
+
+```gherkin
+When I open site "<baseUrl>"
+When I click element with locator "#submit"
+When I fill "hello" into element with label "Name"
+Then the heading "Welcome" should be visible
+Then the element with locator "#message" should have contains text "Success"
+```
+
+See the full catalog in [`docs/agent/STEPS.md`](docs/agent/STEPS.md). The `<baseUrl>` placeholder (and helpers like `<generateEmail>`) are resolved from your config at runtime.
+
+## How visual regression works
+
+1. A scenario tagged `@visual` takes a screenshot and sends it to Syngrisi.
+2. **No baseline yet?** It's saved as a *new* baseline and the check passes. You review and accept it in the UI.
+3. **Baseline exists?** The new screenshot is compared to it. Identical → pass. Different → **fail**, with a pixel diff in the UI.
+
+| Run overview | New baseline | Failed check | Diff view |
+| --- | --- | --- | --- |
+| ![overview](docs/assets/syngrisi/syngrisi-dashboard.png) | ![new](docs/assets/syngrisi/syngrisi-new-baseline.png) | ![failure](docs/assets/syngrisi/syngrisi-check-failure.png) | ![diff](docs/assets/syngrisi/syngrisi-visual-diff.png) |
+
+The example suite (`features/syngrisi/visual_demo_app.feature`) checks the [Syngrisi demo app](https://viktor-silakov.github.io/syngrisi-demo-app/) and includes a regression-detection demo you can run once a baseline exists:
 
 ```bash
-yarn bddgen        # Generate Playwright specs from feature files
-yarn test          # Run all E2E tests in Chromium
-yarn test:smoke    # Run @smoke tests
-yarn test:examples # Run @example tests
-yarn test:visual   # Run stable Syngrisi visual examples
-yarn test:headed   # Run tests in headed mode
-yarn test:unit     # Pure-logic unit tests (helpers), no browser, <1s
-yarn test:mcp      # MCP server / test-engine subsystem tests
-yarn lint          # Biome lint
-yarn format        # Biome format (write)
-yarn verify        # Biome lint + format check (CI gate)
-yarn type-check    # TypeScript type check
-yarn steps:docs    # Regenerate docs/agent/STEPS.md
+yarn test:visual:failing   # intentionally fails — proves diffs are caught
 ```
 
-Quality is enforced in CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)): a **static** job (`verify` + `type-check` + STEPS.md freshness), a **unit** job (`test:unit` + `test:mcp`), and an **e2e** job (`test`). Run `yarn verify && yarn type-check && yarn test:unit` locally before pushing.
-
-## Project Structure
-
-```text
-.
-├── config.ts                  # Environment config
-├── playwright.config.ts       # Playwright BDD config
-├── AGENTS.md                  # Canonical AI agent instructions (CLAUDE.md is a symlink)
-├── ARCHITECTURE.md            # System design and data flows
-├── llms.txt                   # Repository map for LLMs
-├── features/
-│   ├── syngrisi/              # Syngrisi visual regression examples (demo app)
-│   ├── the-internet/          # Generic BDD example (common steps)
-│   └── examples/              # Accessibility (axe) example
-├── steps/
-│   ├── common/                # Reusable step definitions
-│   ├── domain/                # Add project-specific steps here
-│   └── helpers/               # Locator, assertion, and template helpers
-├── scripts/                   # Maintenance scripts (steps doc generator)
-├── support/
-│   ├── fixtures/              # Playwright fixtures
-│   ├── mcp/                   # MCP server and test engine CLI (+ test/ specs)
-│   ├── lib/                   # Logger
-│   └── utils/                 # Shared utilities (env loader, common)
-├── tests/unit/                # Pure-logic unit tests (yarn test:unit)
-├── test-data/                 # Local test data files
-├── biome.json                 # Biome linter/formatter config
-├── .github/workflows/         # CI (static / unit / e2e)
-└── docs/agent/                # Agent-oriented testing guides + generated STEPS.md
-```
-
-## AI Tooling
-
-This repository is set up for AI-assisted development (Claude Code, Cursor, Copilot, Codex, Antigravity):
-
-- [AGENTS.md](AGENTS.md) — single source of agent instructions; `CLAUDE.md` and `.github/copilot-instructions.md` are symlinks to it
-- [ARCHITECTURE.md](ARCHITECTURE.md) — system design with data-flow diagrams
-- [docs/agent/STEPS.md](docs/agent/STEPS.md) — generated reference of all Gherkin steps (`yarn steps:docs`)
-- [llms.txt](llms.txt) — repository map for LLM indexing
-- `.aiignore` / `.cursorignore` — keep generated artifacts out of AI context
-- `support/mcp/` — MCP Test Engine so agents can drive a live browser session
-- Biome (`yarn lint`/`format`/`verify`) enforces a consistent style so AI diffs stay clean
-
-## Example Coverage
-
-- `features/syngrisi/visual_demo_app.feature` — the headline example: element, viewport and full-page visual checks against the Syngrisi demo app, plus a `@visual-failing` scenario that demonstrates regression detection on a broken version.
-- `features/the-internet/basic_navigation.feature` — a generic `@example @smoke` scenario showing the common navigation/assertion steps.
-- `features/examples/accessibility.feature` — an `@a11y` accessibility check via `@axe-core/playwright`.
-
-```bash
-yarn test:examples   # @example tagged scenarios
-yarn test:smoke      # @smoke tagged scenarios
-```
+> **Tip:** in the Syngrisi table, expand the test row and open the nested check card. The id in the top-level grouped table is a *test* id, not a check id — if a modal shows `Empty check data`, remove `checkId` from the URL and open the nested check.
 
 ## Configuration
 
-Create a local `.env` from `.env.example` when you need overrides.
+Copy `.env.example` to `.env` and override what you need. The defaults work out of the box.
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `E2E_BASE_URL` | `https://the-internet.herokuapp.com` | Base URL used by `<baseUrl>` in features |
-| `E2E_LOG_LEVEL` | `info` | Framework log level |
-| `PLAYWRIGHT_HEADED` | `false` | Run browser in headed mode |
-| `PLAYWRIGHT_WORKERS` | `4` | Number of Playwright workers |
-| `E2E_DEBUG` | `false` | Enable debug behavior |
-| `E2E_FORCE_TRACE` | `false` | Force Playwright traces for all tests |
-| `CI` | `false` | CI mode |
+| `E2E_BASE_URL` | `https://the-internet.herokuapp.com` | Resolves `<baseUrl>` in features |
+| `SYNGRISI_BASE_URL` | `http://localhost:5566/` | Syngrisi server URL |
+| `SYNGRISI_DB_URI` | `mongodb://127.0.0.1:27017/e2eBoilerplateSyngrisiDB` | MongoDB connection |
+| `SYNGRISI_PROJECT` / `SYNGRISI_BRANCH` | `MyProject` / `main` | Groups baselines in Syngrisi |
+| `DISABLE_VISUAL_CHECKS` | `false` | Skip all visual checks (or tag a scenario `@no-visual`) |
+| `PLAYWRIGHT_HEADED` | `false` | Run the browser headed |
 
-## Adding Tests
+<a name="mongodb"></a>**Starting MongoDB** (Syngrisi needs it for baselines):
 
-Add Gherkin scenarios under `features/`.
+```bash
+# macOS (Homebrew)
+brew tap mongodb/brew && brew install mongodb-community && brew services start mongodb-community
 
-```gherkin
-Feature: Search
-
-  Scenario: Open search page
-    When I open site "<baseUrl>/search"
-    Then the heading "Search" should be visible
+# or Docker (any platform)
+docker run -d --name syngrisi-mongo -p 27017:27017 mongo:8
 ```
 
-Add custom project steps under `steps/domain/` only when common steps are not enough.
+## All commands
+
+<details>
+<summary>Full command reference</summary>
+
+| Command | What it does |
+| --- | --- |
+| `yarn sy` | Start the Syngrisi server (port 5566, auth disabled) |
+| `yarn test:visual` | Run the stable Syngrisi visual checks |
+| `yarn test:visual:failing` | Run the regression-detection demo (expected to fail) |
+| `yarn test` | Run the non-visual E2E suite (Chromium) — no Syngrisi needed |
+| `yarn test:headed` | Run tests with a visible browser |
+| `yarn test:smoke` / `yarn test:examples` | Run `@smoke` / `@example` scenarios |
+| `yarn bddgen` | Generate Playwright specs from `.feature` files |
+| `yarn test:unit` | Pure-logic helper unit tests (no browser, < 1s) |
+| `yarn test:mcp` | MCP test-engine subsystem tests |
+| `yarn lint` / `yarn format` | Biome lint / auto-format |
+| `yarn verify` / `yarn type-check` | CI gates: Biome check + TypeScript |
+| `yarn steps:docs` | Regenerate `docs/agent/STEPS.md` |
+
+Before pushing: `yarn verify && yarn type-check && yarn test:unit`. CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs static, unit, e2e and visual jobs.
+
+</details>
+
+## Adding custom steps
+
+Most scenarios are covered by the built-in steps. When you need something app-specific, add it under `steps/domain/`:
 
 ```ts
 import { When } from '@fixtures';
@@ -142,114 +135,42 @@ When('I do a project-specific action', async ({ page }) => {
 });
 ```
 
-## Common Step Examples
+<details>
+<summary>Project structure</summary>
 
-```gherkin
-When I open site "<baseUrl>"
-When I open url "<baseUrl>/login"
-When I click element with locator "#submit"
-When I fill "hello" into element with label "Name"
-When I fill "hello" into element with locator "#name"
-When I press the "Enter" key
-When I wait until element "#status" contains text "Done"
-
-Then the heading "Welcome" should be visible
-Then the element with locator "#message" should have contains text "Success"
-Then the element with locator "#email" should have value "user@example.com"
-Then the title contains "The Internet"
+```text
+.
+├── features/          # Gherkin scenarios (syngrisi/, the-internet/, examples/)
+├── steps/
+│   ├── common/        # ~150 reusable step definitions
+│   ├── domain/        # your project-specific steps
+│   └── helpers/       # locator, assertion, template helpers
+├── support/
+│   ├── fixtures/      # Playwright/BDD fixtures (incl. Syngrisi)
+│   └── mcp/           # MCP test engine + CLI
+├── tests/unit/        # pure-logic unit tests
+├── docs/agent/        # testing guides + generated STEPS.md
+├── config.ts          # environment config
+└── playwright.config.ts
 ```
 
-## MCP Test Engine
+</details>
 
-Start an interactive browser session for agent-driven debugging:
+## AI-assisted development
 
-```bash
-export SYSTEM_THREAD=agent-session
-npx tsx support/mcp/test-engine-cli.ts start my-session --headed
-npx tsx support/mcp/test-engine-cli.ts step "I open site \"<baseUrl>\""
-npx tsx support/mcp/test-engine-cli.ts step "I analyze current page"
-npx tsx support/mcp/test-engine-cli.ts shutdown
-```
+This repo is set up for AI coding agents (Claude Code, Cursor, Copilot, Codex):
 
-## Visual Regression
+- [`AGENTS.md`](AGENTS.md) — single source of agent instructions (`CLAUDE.md` is a symlink)
+- [`docs/agent/`](docs/agent/) — task guides; [`STEPS.md`](docs/agent/STEPS.md) is the generated step reference
+- **MCP Test Engine** — drive a live browser from an agent:
 
-Visual regression is the core purpose of this boilerplate. The Syngrisi fixture checks `SYNGRISI_BASE_URL` before the first visual check and starts Syngrisi automatically when it is not running. Visual checks are enabled by default; set `DISABLE_VISUAL_CHECKS=true` (or tag a scenario `@no-visual`) to skip them.
+  ```bash
+  export SYSTEM_THREAD=agent-session
+  npx tsx support/mcp/test-engine-cli.ts start my-session --headed
+  npx tsx support/mcp/test-engine-cli.ts step "I open site \"<baseUrl>\""
+  npx tsx support/mcp/test-engine-cli.ts shutdown
+  ```
 
-### Prerequisites
+## License
 
-Syngrisi requires MongoDB on `127.0.0.1:27017` (or set `SYNGRISI_DB_URI` to another instance). Start it with Homebrew:
-
-```bash
-brew tap mongodb/brew
-brew install mongodb-community
-brew services start mongodb-community
-```
-
-Or with Docker:
-
-```bash
-docker run -d --name syngrisi-mongo -p 27017:27017 mongo:8
-```
-
-```bash
-yarn test:visual
-```
-
-Defaults:
-
-- Syngrisi UI: `http://localhost:5566/`
-- Log file: `logs/syngrisi/syngrisi.log`
-- MongoDB URI: `mongodb://127.0.0.1:27017/e2eBoilerplateSyngrisiDB`
-
-The first visual run usually creates new baselines. Review and accept them in the Syngrisi UI, then rerun `yarn test:visual`.
-
-When opening details from the Syngrisi table, expand the test row and click the nested check preview/card. The id displayed in the top-level grouped table is usually a test id, not a check id. If the modal says `Empty check data`, remove `checkId` from the URL and open the nested check instead.
-
-### Syngrisi UI Screenshots
-
-Run overview:
-
-![Syngrisi run overview](docs/assets/syngrisi/syngrisi-dashboard.png)
-
-New baseline review:
-
-![Syngrisi new baseline review](docs/assets/syngrisi/syngrisi-new-baseline.png)
-
-Failed visual check with diff overlay:
-
-![Syngrisi failed visual check](docs/assets/syngrisi/syngrisi-check-failure.png)
-
-Visual diff view:
-
-![Syngrisi visual diff](docs/assets/syngrisi/syngrisi-visual-diff.png)
-
-There is also an intentionally failing visual example. It mutates the login page with a random banner and compares it against the stable login-form baseline:
-
-```bash
-yarn test:visual:failing
-```
-
-This command is expected to exit with a non-zero status after the baseline exists.
-
-Set `DISABLE_VISUAL_CHECKS=true` to skip visual checks.
-
-## Browser Skill
-
-Claude-compatible browser automation instructions live in `.claude/skills/browser/SKILL.md`. The skill is adapted for this boilerplate and uses the local test-engine CLI:
-
-```bash
-yarn bddgen
-export SYSTEM_THREAD=manual-browser
-npx tsx support/mcp/test-engine-cli.ts start manual-browser --headed
-npx tsx support/mcp/test-engine-cli.ts step "I open site \"<baseUrl>\""
-npx tsx support/mcp/test-engine-cli.ts shutdown
-```
-
-## Agent Documentation
-
-See `docs/agent/` for detailed testing guides:
-
-- [Run Tests Guide](docs/agent/guides/run_test.md)
-- [Common Steps Cheatsheet](docs/agent/guides/common_steps_cheatsheet.md)
-- [MCP Test Engine Usage](docs/agent/guides/mcp_test_engine_using.md)
-- [Quick Test Generation](docs/agent/guides/test-generate-quick.md)
+MIT — see [LICENSE.md](LICENSE.md).

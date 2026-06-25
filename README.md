@@ -13,6 +13,9 @@ No assertions to write, no screenshots to manage by hand — Syngrisi stores bas
 
 ## Quick start
 
+> [!NOTE]
+> Prefer to let an AI agent do it? Paste the [bootstrap prompt](#bootstrap-with-an-ai-agent) into your coding agent and it will handle setup, verification, and the first visual run for you.
+
 You need **Node.js ≥ 22.19** and **MongoDB ≥ 8** running locally ([how to start MongoDB](#mongodb)).
 
 ```bash

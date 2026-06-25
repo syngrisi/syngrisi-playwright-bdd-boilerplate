@@ -1,0 +1,6 @@
+{
+  "playwright-bdd-helper.commandArgs": "",
+  "playwright-bdd-helper.commandTemplate": "npx bddgen && npx playwright test \"{{featurePath}}\" --grep \"{{grepPattern}}\"{{commandArgsString}} --workers=1 --project=chromium",
+  "playwright-bdd-helper.debugCommandTemplate": "npx bddgen && npx playwright test \"{{featurePath}}\" --grep \"{{grepPattern}}\"{{commandArgsString}} --workers=1 --project=chromium --headed",
+  "playwright-bdd-helper.componentsFilePath": "support/components.po.ts"
+}

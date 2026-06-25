@@ -160,7 +160,38 @@ When('I do a project-specific action', async ({ page }) => {
 
 ## AI-assisted development
 
-This repo is set up for AI coding agents (Claude Code, Cursor, Copilot, Codex):
+This repo is set up for AI coding agents (Claude Code, Cursor, Copilot, Codex).
+
+### Bootstrap with an AI agent
+
+Don't want to run the steps yourself? Paste this prompt into your coding agent and it will set everything up, verify the install, and hand you a URL to review:
+
+```text
+Set up this Syngrisi Playwright BDD boilerplate and run a first visual test. Steps:
+
+1. Preconditions:
+   - Ensure Node.js >= 22.19 is available (report the version).
+   - Ensure MongoDB >= 8 is running on localhost:27017. If it isn't, start it
+     (Docker: `docker run -d --name syngrisi-mongo -p 27017:27017 mongo:8`,
+     or `brew services start mongodb-community` on macOS). Confirm it's reachable.
+2. Install dependencies: run `yarn install` (this also installs Chromium).
+3. Sanity check the build WITHOUT Syngrisi: run `yarn test` (the non-visual
+   suite). It must pass — this proves the project compiled and installed correctly.
+   If it fails, stop and report the error.
+4. Start the Syngrisi server in the background: `yarn sy`. Wait until
+   http://localhost:5566 responds.
+5. Run the basic visual test: `yarn test:visual`. On a fresh database the checks
+   get a "new" status and pass (these are the first baselines).
+6. Report the results, then give me this URL and ask me to review:
+   http://localhost:5566
+   Tell me to open it, review the new baselines, and accept the ones that look
+   correct — after I accept, re-running `yarn test:visual` will compare against them.
+
+Do not accept baselines yourself — that's my decision. Report any failure with the
+exact command output instead of guessing.
+```
+
+### Reference for agents
 
 - [`AGENTS.md`](AGENTS.md) — single source of agent instructions (`CLAUDE.md` is a symlink)
 - [`docs/agent/`](docs/agent/) — task guides; [`STEPS.md`](docs/agent/STEPS.md) is the generated step reference

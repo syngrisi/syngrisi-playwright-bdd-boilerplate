@@ -19,9 +19,11 @@ Scenario: The dashboard looks right
 
 No assertions to write, no screenshots to manage by hand — Syngrisi stores baselines and shows you the diffs.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/syngrisi/syngrisi-playwright-bdd-boilerplate)
-[![Use this template](https://img.shields.io/badge/Use%20this%20template-2ea44f?logo=github&logoColor=white)](https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate/generate)
+<p>
+  <a href="https://gitpod.io/#https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate"><img height="32" alt="Open in Gitpod" src="https://gitpod.io/button/open-in-gitpod.svg"></a>
+  <a href="https://codespaces.new/syngrisi/syngrisi-playwright-bdd-boilerplate"><img height="32" alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg"></a>
+  <a href="https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate/generate"><img height="32" alt="Use this template" src="https://img.shields.io/badge/Use%20this%20template-2ea44f?logo=github&logoColor=white&style=for-the-badge"></a>
+</p>
 
 ## Quick start
 

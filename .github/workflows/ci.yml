@@ -61,7 +61,7 @@ jobs:
       - name: Enable yarn
         run: corepack enable
       - name: Cache yarn downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .yarn-cache
           key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
@@ -82,7 +82,7 @@ jobs:
       - name: Enable yarn
         run: corepack enable
       - name: Cache yarn downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .yarn-cache
           key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
@@ -121,7 +121,7 @@ jobs:
       - name: Enable yarn
         run: corepack enable
       - name: Cache yarn downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .yarn-cache
           key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}

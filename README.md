@@ -1,11 +1,5 @@
 # Syngrisi Playwright BDD Boilerplate
 
-
-
-https://github.com/user-attachments/assets/c9659824-1135-4836-8e77-cf6a0118938b
-
-
-
 [![CI](https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 ![Node](https://img.shields.io/badge/node-%E2%89%A522.19-339933?logo=node.js&logoColor=white)
@@ -13,6 +7,8 @@ https://github.com/user-attachments/assets/c9659824-1135-4836-8e77-cf6a0118938b
 [![Syngrisi](https://img.shields.io/badge/Syngrisi-visual%20testing-1f6feb)](https://github.com/syngrisi/syngrisi)
 
 Write visual regression tests in plain Gherkin and run them against [Syngrisi](https://github.com/syngrisi/syngrisi) — powered by [Playwright](https://playwright.dev) and [`playwright-bdd`](https://github.com/vitalets/playwright-bdd).
+
+https://github.com/user-attachments/assets/c9659824-1135-4836-8e77-cf6a0118938b
 
 ```gherkin
 Scenario: The dashboard looks right

@@ -1,5 +1,11 @@
 # Syngrisi Playwright BDD Boilerplate
 
+[![CI](https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+![Node](https://img.shields.io/badge/node-%E2%89%A522.19-339933?logo=node.js&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)
+[![Syngrisi](https://img.shields.io/badge/Syngrisi-visual%20testing-1f6feb)](https://github.com/syngrisi/syngrisi)
+
 Write visual regression tests in plain Gherkin and run them against [Syngrisi](https://github.com/syngrisi/syngrisi) — powered by [Playwright](https://playwright.dev) and [`playwright-bdd`](https://github.com/vitalets/playwright-bdd).
 
 ```gherkin
@@ -10,6 +16,10 @@ Scenario: The dashboard looks right
 ```
 
 No assertions to write, no screenshots to manage by hand — Syngrisi stores baselines and shows you the diffs.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/syngrisi/syngrisi-playwright-bdd-boilerplate)
+[![Use this template](https://img.shields.io/badge/Use%20this%20template-2ea44f?logo=github&logoColor=white)](https://github.com/syngrisi/syngrisi-playwright-bdd-boilerplate/generate)
 
 ## Quick start
 
@@ -206,6 +216,12 @@ exact command output instead of guessing.
   npx tsx support/mcp/test-engine-cli.ts step "I open site \"<baseUrl>\""
   npx tsx support/mcp/test-engine-cli.ts shutdown
   ```
+
+## Related projects
+
+- **[syngrisi/syngrisi](https://github.com/syngrisi/syngrisi)** — the open-source visual testing platform (server + UI) this boilerplate talks to.
+- [syngrisi/syngrisi-playwright-boilerplate](https://github.com/syngrisi/syngrisi-playwright-boilerplate) — plain Playwright (no BDD), if you don't need Gherkin.
+- [syngrisi/syngrisi-cucumber-boilerplate](https://github.com/syngrisi/syngrisi-cucumber-boilerplate) — WebdriverIO + Cucumber flavor.
 
 ## License
 

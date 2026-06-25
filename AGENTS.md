@@ -8,8 +8,8 @@ Reusable Playwright + Gherkin E2E testing boilerplate with ~150 ready-made step 
 
 ## Tech Stack
 
-- Node 24 (`.nvmrc`), TypeScript 5.9 (strict), yarn 1.x
-- Playwright 1.57 + playwright-bdd 8.4 (Gherkin → generated specs)
+- Node 22 (`.nvmrc`), TypeScript 6.0 (strict), yarn 1.x
+- Playwright 1.61 + playwright-bdd 9.2 (Gherkin → generated specs)
 - Syngrisi 3.5 (visual regression, requires local MongoDB)
 - MCP SDK 1.21 (AI agent browser sessions)
 - envalid (config), winston (logging), zod (validation)
@@ -64,7 +64,6 @@ Reusable Playwright + Gherkin E2E testing boilerplate with ~150 ready-made step 
 │   ├── fixtures/            # Playwright fixtures (app-server, test-data, test-engine, syngrisi)
 │   ├── params.ts            # BDD parameter types (role, ordinal, condition)
 │   ├── mcp/                 # MCP server/bridge/test-engine (has own AGENTS.md)
-│   ├── demo/                # Demo utilities (highlight, speech, progress)
 │   ├── lib/                 # Logger
 │   └── utils/               # waitFor, hasTag, sleep
 └── docs/agent/              # Agent documentation guides

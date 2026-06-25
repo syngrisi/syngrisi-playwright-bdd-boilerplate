@@ -1,6 +1,6 @@
-# Playwright BDD E2E Boilerplate
+# Syngrisi Playwright BDD Boilerplate
 
-> Reusable Playwright + Gherkin (playwright-bdd) E2E testing boilerplate with ~150 ready-made step definitions, an MCP Test Engine for AI-driven browser sessions, and optional Syngrisi visual regression. TypeScript, yarn, Node 24.
+> Playwright + Gherkin (playwright-bdd) boilerplate centered on Syngrisi visual regression (enabled by default), with ~150 ready-made step definitions and an MCP Test Engine for AI-driven browser sessions. TypeScript, yarn, Node 22.
 
 Key facts: tests are Gherkin files in features/ compiled by `yarn bddgen` into .features-gen/ (generated, never edit). Step definitions live in steps/common/ (universal, stable API), steps/domain/ (project-specific), steps/helpers/ (shared helpers). Fixtures are merged in support/fixtures/index.ts. The MCP subsystem in support/mcp/ uses relative imports only.
 

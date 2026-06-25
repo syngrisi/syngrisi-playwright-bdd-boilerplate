@@ -93,6 +93,37 @@ yarn test:visual:failing   # intentionally fails — proves diffs are caught
 
 > **Tip:** in the Syngrisi table, expand the test row and open the nested check card. The id in the top-level grouped table is a *test* id, not a check id — if a modal shows `Empty check data`, remove `checkId` from the URL and open the nested check.
 
+## Add to an existing project
+
+Already have a Playwright (or playwright-bdd) suite? You don't need to start from this template — drop Syngrisi visual checks into the project you already have:
+
+1. **Install the SDK:**
+
+   ```bash
+   yarn add -D @syngrisi/playwright-sdk
+   ```
+
+2. **Copy the [`support/fixtures/syngrisi/`](support/fixtures/syngrisi) folder** into your project, merge its fixture into your `test`, and re-export its `expect`:
+
+   ```ts
+   import { mergeTests } from '@playwright/test';
+   import { syngrisiFixture, expect } from './fixtures/syngrisi/syngrisi.fixture';
+
+   export const test = mergeTests(/* your existing fixtures */ syngrisiFixture);
+   export { expect };
+   ```
+
+3. **Point the `SYNGRISI_*` env vars** at your server (see [Configuration](#configuration)) and start checking — anywhere in your existing tests:
+
+   ```ts
+   await expect(page).toMatchBaseline('Homepage');
+   await expect(page.locator('#chart')).toMatchBaseline('Chart');
+   ```
+
+Using **playwright-bdd**? Also copy [`steps/common/visual.steps.ts`](steps/common/visual.steps.ts) to get the Gherkin `the "..." visual snapshot matches "..."` step, and build your BDD helpers from the merged `test` via `createBdd(test)`.
+
+No new repo, no rewrite — visual regression drops into the suite you already run.
+
 ## Configuration
 
 Copy `.env.example` to `.env` and override what you need. The defaults work out of the box.

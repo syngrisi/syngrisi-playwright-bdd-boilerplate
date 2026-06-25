@@ -84,7 +84,7 @@ Feature: Login
 
 - **Network mocking** (`api-mocking.steps.ts`): `I block requests matching "..."` and `I mock "..." with status N and json body:` (Playwright `page.route`) — stub a backend or block resources.
 - **Accessibility** (`accessibility.steps.ts`): `the page should have no accessibility violations of severity "critical" or higher` (axe-core).
-- **Data factories**: template generators resolve at runtime — `<generateEmail>`, `<generateUUID>`, `<generateNumber[1,100]>`, `<currentDate>` — so each run uses fresh values (see `features/examples/data_factory.feature`).
+- **Data factories**: template generators resolve at runtime — `<generateEmail>`, `<generateUUID>`, `<generateNumber[1,100]>`, `<currentDate>` — so each run uses fresh values.
 
 ### Reusing login state (storageState)
 

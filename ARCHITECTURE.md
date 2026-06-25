@@ -73,6 +73,5 @@ flowchart LR
 | `steps/helpers/` | Locator builders, assertion helpers, template engine |
 | `support/fixtures/` | Playwright fixtures, merged in `index.ts` |
 | `support/mcp/` | MCP server, bridge, test-engine CLI (own AGENTS.md) |
-| `support/demo/` | Demo utilities (highlight, speech, progress) |
 | `scripts/` | Maintenance scripts (`generate-steps-doc.ts`) |
 | `docs/agent/` | Agent guides + generated STEPS.md |

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/.features-gen",
+      "!**/.features-gen-demo",
+      "!**/reports",
+      "!**/logs",
+      "!**/.tmp",
+      "!**/.snapshots-images",
+      "!**/support/mcp/steps",
+      "!**/dist",
+      "!**/*.yaml",
+      "!**/*.yml",
+      "!**/*.html",
+      "!**/test/fixtures"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all",
+      "semicolons": "always"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noConsole": "off",
+        "noControlCharactersInRegex": "off"
+      },
+      "style": {
+        "useNodejsImportProtocol": "off",
+        "noParameterAssign": "off",
+        "useImportType": "warn",
+        "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "noForEach": "off"
+      },
+      "correctness": {
+        "noEmptyPattern": "off",
+        "noUnusedFunctionParameters": "off"
+      },
+      "security": {
+        "noGlobalEval": "off"
+      }
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  }
+}

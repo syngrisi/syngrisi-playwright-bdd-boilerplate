@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "test_engine": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["tsx", "./support/mcp/bridge-cli.ts"],
+      "env": {
+        "E2E_ROOT": "."
+      }
+    }
+  }
+}

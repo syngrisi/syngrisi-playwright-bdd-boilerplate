@@ -1,0 +1,15 @@
+# Generated and runtime artifacts — not useful as AI context
+node_modules/
+.features-gen/
+.features-gen-demo/
+logs/
+reports/
+test-results/
+playwright-report/
+.tmp/
+.snapshots-images/
+baselines/
+dist/
+yarn.lock
+.env
+.DS_Store

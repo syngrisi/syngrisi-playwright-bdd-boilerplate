@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    // TS6: node10/baseUrl/downlevelIteration are deprecated (removed in TS7).
+    // Silenced for now; migrate moduleResolution to "bundler"/"nodenext" before TS7.
+    "ignoreDeprecations": "6.0",
+    "types": ["node", "@playwright/test"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "downlevelIteration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@config": ["config"],
+      "@fixtures": ["support/fixtures/index"],
+      "@fixtures/*": ["support/fixtures/*"],
+      "@helpers/*": ["steps/helpers/*"],
+      "@utils/*": ["support/utils/*"],
+      "@lib/*": ["support/lib/*"],
+      "@params": ["support/params"],
+      "@logger": ["support/mcp/utils/logger"]
+    },
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": ["playwright.config.ts", "config.ts", "steps/**/*.ts", "support/**/*.ts"]
+}

@@ -1,0 +1,68 @@
+{
+  "name": "syngrisi-playwright-bdd-boilerplate",
+  "description": "Playwright BDD boilerplate for Syngrisi visual regression testing, with ~150 reusable Gherkin steps and MCP server support for AI agents.",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.mjs",
+    "bddgen": "bddgen",
+    "kill": "(pkill -9 -f playwright || true; pkill -9 -f chromium || true; sleep 3 && echo 'Killed all test processes') || true",
+    "test": "yarn kill && bddgen && playwright test --project=chromium --grep-invert '@visual' --reporter=list",
+    "test:ci": "bddgen && playwright test --project=chromium --grep-invert '@visual' --reporter=list",
+    "test:smoke": "bddgen && playwright test --project=chromium --grep '@smoke' --grep-invert '@visual' --reporter=list",
+    "test:headed": "bddgen && cross-env PLAYWRIGHT_HEADED=1 playwright test --project=chromium --grep-invert '@visual' --reporter=list",
+    "test:mcp": "cross-env E2E_HEADLESS=1 MCP_IDLE_TIMEOUT_MS=15000 MCP_IDLE_CHECK_INTERVAL_MS=3000 playwright test --workers=1 --config support/mcp/playwright.config.ts --reporter=list",
+    "test:mcp:headed": "cross-env PLAYWRIGHT_HEADED=1 playwright test --workers=1 --config support/mcp/playwright.config.ts --reporter=list",
+    "test:examples": "bddgen && playwright test --project=chromium --grep '@example' --grep-invert '@visual' --reporter=list",
+    "test:visual": "bddgen && playwright test --project=chromium --grep '@visual' --grep-invert '@visual-failing' --workers=1 --reporter=list",
+    "test:visual:failing": "bddgen && playwright test --project=chromium --grep '@visual-failing' --workers=1 --retries=0 --reporter=list",
+    "steps:docs": "tsx scripts/generate-steps-doc.ts",
+    "test:unit": "playwright test --config playwright.unit.config.ts --reporter=list",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "verify": "biome check .",
+    "type-check": "tsc --noEmit",
+    "sy": "cross-env SYNGRISI_AUTH=false SYNGRISI_APP_PORT=5566 npx sy"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@biomejs/biome": "2.5.1",
+    "@cucumber/messages": "^32",
+    "@modelcontextprotocol/sdk": "^1.21.1",
+    "@playwright/test": "^1.61.1",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^26.0.1",
+    "chalk": "^4.1.2",
+    "cheerio": "^1.0.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "17.4.2",
+    "envalid": "8.2.0",
+    "js-yaml": "4.2.0",
+    "playwright-bdd": "^9.2.0",
+    "playwright-mcp-advanced": "^0.1.0",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3",
+    "winston": "^3.19.0",
+    "yaml": "2.9.0",
+    "zod": "^3.25.76"
+  },
+  "resolutions": {
+    "chalk": "4.1.2",
+    "**/chalk": "4.1.2",
+    "strip-ansi": "6.0.1",
+    "**/strip-ansi": "6.0.1",
+    "playwright": "1.61.1",
+    "**/playwright": "1.61.1",
+    "playwright-core": "1.61.1",
+    "**/playwright-core": "1.61.1"
+  },
+  "dependencies": {
+    "@syngrisi/playwright-sdk": "^3.5.1",
+    "@syngrisi/syngrisi": "^3.5.1",
+    "sy": "^0.1.0",
+    "ua-parser-js": "2.0.10"
+  }
+}

@@ -1,0 +1,39 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      # Batch low-risk updates into a single PR to reduce noise
+      dev-minor-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Held back deliberately — see package.json resolutions and tests/unit/dependency-pins.spec.ts
+      # zod 4 breaks zod-to-json-schema used by playwright-mcp-advanced
+      - dependency-name: zod
+        update-types: [version-update:semver-major]
+      # chalk 5 / strip-ansi 7 are ESM-only and break the CJS MCP bridge
+      - dependency-name: chalk
+        update-types: [version-update:semver-major]
+      - dependency-name: strip-ansi
+        update-types: [version-update:semver-major]
+      # @playwright/test 1.60 removed internals playwright-bdd relies on;
+      # bump only together with a compatible playwright-bdd, and update the CI image tag
+      - dependency-name: '@playwright/test'
+        update-types: [version-update:semver-minor, version-update:semver-major]
+      - dependency-name: playwright-bdd
+        update-types: [version-update:semver-major]
+      # @types/node tracks the Node runtime (24, see .nvmrc)
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

@@ -1,0 +1,145 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: Static checks (lint, format, types)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - run: yarn verify
+      - run: yarn type-check
+      - name: Verify generated step reference is up to date
+        run: |
+          yarn steps:docs
+          git diff --exit-code docs/agent/STEPS.md || {
+            echo "::error::docs/agent/STEPS.md is stale. Run 'yarn steps:docs' and commit.";
+            exit 1;
+          }
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      # Advisory only: print high+ vulnerabilities to the log without failing the
+      # pipeline on transitive advisories outside our direct control.
+      - run: yarn audit --level high || true
+
+  # Browser jobs run in the official Playwright image: Chromium and its OS
+  # dependencies are baked in, so there is no browser download on the runner
+  # (the Playwright CDN download stalled on plain ubuntu runners). The image
+  # version must match the installed @playwright/test (1.61.1).
+  unit:
+    name: Unit tests (helpers + MCP core)
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-jammy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable yarn
+        run: corepack enable
+      - name: Cache yarn downloads
+        uses: actions/cache@v4
+        with:
+          path: .yarn-cache
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: yarn-${{ runner.os }}-
+      - run: yarn install --frozen-lockfile --cache-folder .yarn-cache
+      - name: Pure-logic unit tests
+        run: yarn test:unit
+      - name: MCP subsystem tests
+        run: yarn test:mcp
+
+  e2e:
+    name: E2E examples
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-jammy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable yarn
+        run: corepack enable
+      - name: Cache yarn downloads
+        uses: actions/cache@v4
+        with:
+          path: .yarn-cache
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: yarn-${{ runner.os }}-
+      - run: yarn install --frozen-lockfile --cache-folder .yarn-cache
+      - name: Run example E2E scenarios
+        # test:ci omits 'yarn kill' (pkill -f playwright/chromium), which would
+        # SIGKILL the test process inside the Playwright container.
+        run: yarn test:ci
+        env:
+          CI: 'true'
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: reports/html
+          retention-days: 7
+
+  visual:
+    name: Visual regression (Syngrisi)
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-jammy
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+    env:
+      # Inside a container job, the service is reachable by its name.
+      SYNGRISI_DB_URI: mongodb://mongodb:27017/SyngrisiBddBP
+      SYNGRISI_BASE_URL: http://localhost:5566/
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable yarn
+        run: corepack enable
+      - name: Cache yarn downloads
+        uses: actions/cache@v4
+        with:
+          path: .yarn-cache
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: yarn-${{ runner.os }}-
+      - run: yarn install --frozen-lockfile --cache-folder .yarn-cache
+      - name: Start Syngrisi server
+        run: yarn sy &
+      - name: Wait for Syngrisi server
+        run: npx wait-on http://localhost:5566 --timeout 60000
+      - name: Run visual checks
+        # Fresh DB → all checks get a "new" status (first baseline) and pass.
+        run: yarn test:visual
+        env:
+          CI: 'true'
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-report
+          path: reports/html
+          retention-days: 7

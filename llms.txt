@@ -1,0 +1,23 @@
+# Playwright BDD E2E Boilerplate
+
+> Reusable Playwright + Gherkin (playwright-bdd) E2E testing boilerplate with ~150 ready-made step definitions, an MCP Test Engine for AI-driven browser sessions, and optional Syngrisi visual regression. TypeScript, yarn, Node 24.
+
+Key facts: tests are Gherkin files in features/ compiled by `yarn bddgen` into .features-gen/ (generated, never edit). Step definitions live in steps/common/ (universal, stable API), steps/domain/ (project-specific), steps/helpers/ (shared helpers). Fixtures are merged in support/fixtures/index.ts. The MCP subsystem in support/mcp/ uses relative imports only.
+
+## Docs
+
+- [AGENTS.md](AGENTS.md): canonical agent instructions (rules, commands, structure)
+- [ARCHITECTURE.md](ARCHITECTURE.md): system design and data flows
+- [docs/agent/STEPS.md](docs/agent/STEPS.md): generated reference of all Gherkin steps
+- [docs/agent/INDEX.md](docs/agent/INDEX.md): index of testing guides
+- [README.md](README.md): quick start, configuration, visual testing prerequisites
+
+## Subsystems
+
+- [support/mcp/AGENTS.md](support/mcp/AGENTS.md): MCP server / test-engine CLI for interactive agent browser sessions
+- [docs/agent/guides/syngrisi_visual.md](docs/agent/guides/syngrisi_visual.md): visual regression (requires local MongoDB)
+
+## Optional
+
+- [docs/agent/guides/common_steps_cheatsheet.md](docs/agent/guides/common_steps_cheatsheet.md): most frequently used steps
+- [docs/agent/guides/selector_best_practices.md](docs/agent/guides/selector_best_practices.md): locator conventions

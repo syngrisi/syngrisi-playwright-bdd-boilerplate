@@ -89,7 +89,7 @@ Copy `.env.example` to `.env` and override what you need. The defaults work out 
 | `DISABLE_VISUAL_CHECKS` | `false` | Skip all visual checks (or tag a scenario `@no-visual`) |
 | `PLAYWRIGHT_HEADED` | `false` | Run the browser headed |
 
-<a name="mongodb"></a>**Starting MongoDB** (Syngrisi needs it for baselines):
+<a name="mongodb"></a>**Starting MongoDB** — Syngrisi stores all its data there (projects, tests, runs, checks, baselines and snapshots):
 
 ```bash
 # macOS (Homebrew)
@@ -98,6 +98,8 @@ brew tap mongodb/brew && brew install mongodb-community && brew services start m
 # or Docker (any platform)
 docker run -d --name syngrisi-mongo -p 27017:27017 mongo:8
 ```
+
+For other platforms, see the [official MongoDB installation guide](https://www.mongodb.com/docs/manual/administration/install-community/).
 
 ## All commands
 

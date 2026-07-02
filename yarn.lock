@@ -132,13 +132,18 @@
     luxon "^3.5.0"
     xmlbuilder "^15.1.1"
 
-"@cucumber/messages@>=31.0.0 <33", "@cucumber/messages@^32", "@cucumber/messages@^32.0.0", "@cucumber/messages@^32.3.1":
+"@cucumber/messages@>=31.0.0 <33", "@cucumber/messages@^32.0.0", "@cucumber/messages@^32.3.1":
   version "32.3.1"
   resolved "https://registry.yarnpkg.com/@cucumber/messages/-/messages-32.3.1.tgz#8c6990554c35fb9bcff0b7f09fe52ddfd479dbce"
   integrity sha512-yNQq1KoXRYaEKrWMFmpUQX7TdeQuU9jeGgJAZ3dArTsC/T4NpJ6DnqaJIIgwPnz/wtQIQTNX7/h0rOuF5xY4qQ==
   dependencies:
     class-transformer "0.5.1"
     reflect-metadata "0.2.2"
+
+"@cucumber/messages@^33":
+  version "33.0.4"
+  resolved "https://registry.yarnpkg.com/@cucumber/messages/-/messages-33.0.4.tgz#bf934d01f3c1b5539b4d7e6a8ab7c1e6b20b08e6"
+  integrity sha512-i6P1a0bnmhecOHfvIW0rhMxv/gMKfBKwDMxmD9/Uo1HSqpQ17ocHms1JwWW6uTMLAopqqWlcz7l6Pax+qUOTzg==
 
 "@cucumber/query@^15.0.1":
   version "15.0.1"

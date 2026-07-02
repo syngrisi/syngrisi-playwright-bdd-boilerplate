@@ -29,12 +29,12 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
-    "@biomejs/biome": "2.5.1",
+    "@biomejs/biome": "2.5.2",
     "@cucumber/messages": "^32",
     "@modelcontextprotocol/sdk": "^1.21.1",
     "@playwright/test": "^1.61.1",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^26.0.1",
+    "@types/node": "^26.1.0",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
     "cross-env": "^10.1.0",
@@ -60,8 +60,8 @@
     "**/playwright-core": "1.61.1"
   },
   "dependencies": {
-    "@syngrisi/playwright-sdk": "^3.5.1",
-    "@syngrisi/syngrisi": "^3.5.1",
+    "@syngrisi/playwright-sdk": "^3.9.1",
+    "@syngrisi/syngrisi": "^3.9.1",
     "sy": "^0.1.0",
     "ua-parser-js": "2.0.10"
   }

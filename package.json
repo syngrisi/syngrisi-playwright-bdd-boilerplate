@@ -28,22 +28,22 @@
     "sy": "cross-env SYNGRISI_AUTH=false SYNGRISI_APP_PORT=5566 npx sy"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.12.1",
-    "@biomejs/biome": "2.5.1",
+    "@axe-core/playwright": "^4.13.0",
+    "@biomejs/biome": "2.5.12",
     "@cucumber/messages": "^32",
-    "@modelcontextprotocol/sdk": "^1.21.1",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "@playwright/test": "^1.61.1",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^26.0.1",
+    "@types/node": "^26.4.1",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
     "cross-env": "^10.1.0",
     "dotenv": "17.4.2",
     "envalid": "8.2.0",
     "js-yaml": "4.2.0",
-    "playwright-bdd": "^9.2.0",
+    "playwright-bdd": "^9.2.1",
     "playwright-mcp-advanced": "^0.1.0",
-    "tsx": "4.22.4",
+    "tsx": "4.23.13",
     "typescript": "6.0.3",
     "winston": "^3.19.0",
     "yaml": "2.9.0",
@@ -60,8 +60,8 @@
     "**/playwright-core": "1.61.1"
   },
   "dependencies": {
-    "@syngrisi/playwright-sdk": "^3.5.1",
-    "@syngrisi/syngrisi": "^3.5.1",
+    "@syngrisi/playwright-sdk": "^3.19.1",
+    "@syngrisi/syngrisi": "^3.19.1",
     "sy": "^0.1.0",
     "ua-parser-js": "2.0.10"
   }
